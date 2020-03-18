@@ -1,7 +1,8 @@
-package com.madoka.starbuzz;
+/* package com.madoka.starbuzz;
 
 
 public class Drink {
+
         private String name;
     private String description;
     private int imageResourceId;
@@ -36,4 +37,7 @@ public class Drink {
     public String toString() {
         return this.name;
     }
+
+
 }
+*/
