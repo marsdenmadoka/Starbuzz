@@ -1,6 +1,7 @@
 package com.madoka.starbuzz;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,17 +9,30 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private Cursor favoritesCursor;
+   private  SearchView searchView;
+    CursorAdapter favoriteAdapter;
+   // MenuItem txtItem=findItemById(R.id.searchText);
+   // MenuItem item=findViewById(R.id.searchText);
+    //MenuItem findItemById(R.id.searchText);
+    //TextView name = (TextView)findViewById(R.id.name);
 
     public MainActivity() {
     }
@@ -50,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         //add listerner to the list view
-        ListView listView = (ListView) findViewById(R.id.list_options);
+        ListView listView = findViewById(R.id.list_options);
         listView.setOnItemClickListener(itemClickListener);
 
 
         //Populate the list_favorites ListView from a cursor
         //  Get the favorites list view.
-        ListView listFavorites = (ListView) findViewById(R.id.list_favorites);
+        ListView listFavorites = findViewById(R.id.list_favorites);
         try {
             SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(this);
             db = starbuzzDatabaseHelper.getReadableDatabase();
@@ -64,11 +78,14 @@ public class MainActivity extends AppCompatActivity {
             favoritesCursor = db.query("DRINK", new String[]{"_id", "NAME"}, //Get the names of the user’s favorite drinks.
                     "FAVORITE = 1",
                     null, null, null, null);
-            CursorAdapter favoriteAdapter = new SimpleCursorAdapter(MainActivity.this,
+            favoriteAdapter = new SimpleCursorAdapter(MainActivity.this,
                     android.R.layout.simple_list_item_1,
                     favoritesCursor,
                     new String[]{"NAME"},
-                    new int[]{android.R.id.text1}, 0);
+                    new int[]{android.R.id.text1},
+                    0);
+
+
             listFavorites.setAdapter(favoriteAdapter);
         } catch (SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
@@ -81,8 +98,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DrinkActivity.class);
                 intent.putExtra(DrinkActivity.EXTRA_DRINKNO, (int) id);
                 startActivity(intent);
+
             }
         });
+
+
     }
 
 
@@ -94,7 +114,34 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    //This gets called when the user returns to the  MainActivity method we restart in order to get the favourite list since Cursors don’t automatically refresh
+ @Override
+public boolean onCreateOptionsMenu( Menu menu) {
+// Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.main_menu, menu);
+    MenuItem searchItem=menu.findItem(R.id.app_bar_search);
+     SearchView searchView = (SearchView) searchItem.getActionView();
+     searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+     //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+         @Override
+         public boolean onQueryTextSubmit(String query) {
+             return false;
+         }
+
+         @Override
+         public boolean onQueryTextChange(String newText) {
+             favoriteAdapter.getFilter().filter(newText);
+             return true;
+         }
+     });
+
+
+     return super.onCreateOptionsMenu(menu);
+}
+
+
+
+//This gets called when the user returns to the  MainActivity method we restart in order to get the favourite list since Cursors don’t automatically refresh
     public void onRestart() {
         super.onRestart();
         try {
@@ -104,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{"_id", "NAME"},
                     "FAVORITE = 1",
                     null, null, null, null);
-            ListView listFavorites = (ListView) findViewById(R.id.list_favorites);
+            ListView listFavorites = findViewById(R.id.list_favorites);
             CursorAdapter adapter = (CursorAdapter) listFavorites.getAdapter();//Get the list view’s adapter.
             adapter.changeCursor(newCursor);//chnage the coursor used  by the cursor adapter to new one
             favoritesCursor = newCursor;

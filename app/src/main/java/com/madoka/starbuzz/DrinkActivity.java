@@ -46,17 +46,17 @@ public class DrinkActivity extends AppCompatActivity {
                 int photoId = cursor.getInt(2);//This is the third column in the cursor.
                 boolean isFavorite = (cursor.getInt(3) == 1); //Get the value of the FAVORITE column. It’s stored in the database as 1 for true, 0 for false.
                 //Populate the drink name
-                TextView name = (TextView) findViewById(R.id.name);
+                TextView name = findViewById(R.id.name);
                 name.setText(nameText);
                 //Populate the drink description
-                TextView description = (TextView) findViewById(R.id.description);
+                TextView description = findViewById(R.id.description);
                 description.setText(descriptionText);
                 //Populate the drink image
-                ImageView photo = (ImageView) findViewById(R.id.photo);
+                ImageView photo = findViewById(R.id.photo);
                 photo.setImageResource(photoId);
                 photo.setContentDescription(nameText);
                 //Populate the favorite checkbox
-                CheckBox favorite = (CheckBox) findViewById(R.id.favorite);
+                CheckBox favorite = findViewById(R.id.favorite);
                 favorite.setChecked(isFavorite);
             }
             cursor.close();
@@ -101,12 +101,12 @@ public class DrinkActivity extends AppCompatActivity {
         }*/
         new UpdateDrinkTask().execute(drinkNo);//Execute the AsyncTask and pass it the drink ID.
     }
-       //Inner class to update the drink.using the async-task
+       //Inner class to update the drink.using the async-task using threads
     private class UpdateDrinkTask extends AsyncTask<Integer, Void, Boolean> {
            ContentValues drinkValues;
 
            protected void onPreExecute() {
-               CheckBox favorite = (CheckBox) findViewById(R.id.favorite);
+               CheckBox favorite = findViewById(R.id.favorite);
                drinkValues = new ContentValues();
                drinkValues.put("FAVORITE", favorite.isChecked());
            }

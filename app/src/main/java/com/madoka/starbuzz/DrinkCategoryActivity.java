@@ -49,7 +49,7 @@ public class DrinkCategoryActivity extends ListActivity {
                     new int[]{android.R.id.text1},//Map the contents of the NAME column to the text in the ListView.
                     0);
             listDrinks.setAdapter(listAdapter);//We’re still using an adapter, but this time it’s a cursor adapter.Use setAdapter() to connect the adapter to the list view.
-        } catch(SQLiteException e) {
+        } catch (SQLiteException e) {
             Toast toast = Toast.makeText(this, "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -60,14 +60,13 @@ public class DrinkCategoryActivity extends ListActivity {
         cursor.close();
         db.close();
     }
+
     @Override
-    public void onListItemClick(ListView listView, //We don’t need to change this method.
-                                View itemView,
-                                int position,
-                                long id) {
+    public void onListItemClick(ListView listView, View itemView, int position, long id) {
         Intent intent = new Intent(DrinkCategoryActivity.this, DrinkActivity.class);
-        intent.putExtra(DrinkActivity.EXTRA_DRINKNO, (int)id);
+        intent.putExtra(DrinkActivity.EXTRA_DRINKNO, (int) id);
         startActivity(intent);
+    }
         /*
         //when using the drink class use this
         //This populates the list view with data from the drinks array.The array contains Drink objects.
@@ -83,7 +82,7 @@ public class DrinkCategoryActivity extends ListActivity {
         startActivity(intent);
 
          */
-    }
+
 }
 
 

@@ -3,6 +3,8 @@
     <string name="starbuzz_logo">starbuzz_logo</string>
     <string name="favorite">Favorite</string>
     <string name="favorites">Your favorite drinks:</string>
+    <string name="search_for_for_food">search for for food</string>
+
     <string-array name="options">
         <item>Drinks</item>
         <item>Food</item>

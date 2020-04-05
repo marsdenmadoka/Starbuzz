@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".DrinkActivity">
+    <!-- Editext for Search -->
+
     <ImageView
         android:id="@+id/photo"
         android:layout_width="190dp"
